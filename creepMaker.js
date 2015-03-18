@@ -1,5 +1,5 @@
 module.exports = function (home, role) {
-    let count=0;
+    var count=0;
     home.room.find(Game.MY_CREEPS).forEach(function (elem, i) {
         elem.memory.role === role ? count++ : '';
     });
@@ -19,31 +19,3 @@ module.exports = function (home, role) {
     default: '';
   }
 };
-// module.exports = {
-//
-//   creepCount: function () {
-//     for(let i in Memory.creeps) {
-//       count++;
-//     }
-//     return count;
-//   },
-//
-//   createHarvester: function (home) {
-//     for(let i in Memory.creeps)
-//     var number = (Memory.creeps.role) ? Memory.creeps.role.harvester.length : 1 ;
-//     home.createCreep([Game.WORK, Game.WORK, Game.CARRY, Game.MOVE, Game.MOVE], 'harvester'+number, {role: 'harvester'});
-//   },
-//
-//   createBuilder: function () {
-//
-//   },
-//
-//   createKnight: function () {
-//
-//   },
-//
-//   createArcher: function () {
-//
-//   }
-//
-// }

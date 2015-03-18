@@ -1,8 +1,8 @@
 
 module.exports = function (count) {
-  let nextCreep = '';
+  var nextCreep = '';
   switch(count){
-    case 1: nextCreep = 'harvester';
+   case 1: nextCreep = 'harvester';
    break;
    case 2: nextCreep = 'harvester';
    break;
@@ -22,4 +22,4 @@ module.exports = function (count) {
     default: '';
   }
   return nextCreep;
-}
+};
