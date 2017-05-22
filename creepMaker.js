@@ -1,54 +1,64 @@
 module.exports = function (home) {
-    var count=0;
-    var ratio = [['harvester', 4, 0, 0.40], ['knight', 4, 0, 0.40],['archer', 2, 0, 0.20]];
-    //, ['builder', 1, 0, .1]
+    let creepArmy = {
+        harvester: {
+            percent: 0.30,
+            count: 0
+        },
+        knight: {
+            percent: 0.30,
+            count: 0
+        },
+        archer: {
+            percent: 0.20,
+            count: 0
+        },
+        builder: {
+            percent: 0.20,
+            count: 0
+        }
+    }
+
     var spawnCreep = '';
 
-    home.room.find(Game.MY_CREEPS).forEach(function (creep, i) {
-      ratio.forEach(function (arrCreep, i) {
-        creep.memory.role === arrCreep[0] ? arrCreep[2]++ : '';
-      });
+    // Get current total of army
+    home.room.find(FIND_MY_CREEPS).forEach(function (creep, i) {
+        creepArmy[creep.memory.role]["count"]++
     });
 
-    for(var i=0; i < ratio.length; i++) {
-      if(home.room.find(Game.MY_CREEPS).length >= 10) {
-        if( ( (home.room.find(Game.MY_CREEPS).length * ratio[i][3]) / 100 ) <= ratio[i][2] ) {
-          spawnCreep = ratio[i][0];
-          count = ratio[i][2];
-          break;
+    for(let role in creepArmy) {
+        let currentPercent = ( creepArmy[role]["count"] / home.room.find(FIND_MY_CREEPS).length )
+        let idealPercent = creepArmy[role]["percent"]
+
+        console.log(role);
+        console.log("c:", currentPercent);
+        console.log("i:", idealPercent);
+
+        if(currentPercent < idealPercent) {
+            spawnCreep = role;
+            break;
         }
-      }
-      if(ratio[i][2] < ratio[i][1]) {
-        spawnCreep = ratio[i][0];
-        count = ratio[i][2];
-        break;
-      }
     }
+    // console.log(spawnCreep);
+    // console.log(JSON.stringify(creepArmy));
 
-    for(var j=0; j < Game.creeps.length; j++) {
-      console.log(Game.creeps[spawnCreep+j]);
-      if(!Game.creeps[spawnCreep+(j+1)]) {
-        count = j+1;
-        break;
-      }
+    // Start off with 4 harveters
+    if(home.room.find(FIND_MY_CREEPS).length <= 4) { spawnCreep = "harvester" }
+
+    let res = "";
+    switch(spawnCreep) {
+        case 'harvester':
+            res = home.createCreep([WORK, CARRY, MOVE], 'harvester'+(++creepArmy[spawnCreep]["count"]), {role: 'harvester'});
+            break;
+        case 'builder':
+            res = home.createCreep([WORK, WORK, MOVE], 'builder'+(++creepArmy[spawnCreep]["count"]), {role: 'builder'});
+            break;
+        case 'knight':
+            res = home.createCreep([TOUGH, ATTACK, MOVE], 'knight'+(++creepArmy[spawnCreep]["count"]), {role: 'knight'});
+            break;
+        case 'archer':
+            res = home.createCreep([RANGED_ATTACK, TOUGH, MOVE], 'archer'+(++creepArmy[spawnCreep]["count"]), {role: 'archer'});
+            break;
+        default: '';
     }
-
-
-    if(home.room.find(Game.MY_CREEPS).length === 0) { spawnCreep = 'harvester'; }
-
-  switch(spawnCreep) {
-    case 'harvester':
-    home.createCreep([Game.WORK, Game.WORK, Game.CARRY, Game.MOVE, Game.MOVE], 'harvester'+(count+1), {role: 'harvester'});
-    break;
-    case 'builder':
-    home.createCreep([Game.WORK, Game.WORK, Game.WORK, Game.CARRY, Game.MOVE], 'builder'+(count+1), {role: 'builder'});
-    break;
-    case 'knight':
-    home.createCreep([Game.TOUGH, Game.ATTACK, Game.ATTACK, Game.MOVE, Game.MOVE], 'knight'+(count+1), {role: 'knight'});
-    break;
-    case 'archer':
-    home.createCreep([Game.TOUGH, Game.RANGED_ATTACK, Game.RANGED_ATTACK, Game.RANGED_ATTACK, Game.MOVE], 'archer'+(count+1), {role: 'archer'});
-    break;
-    default: '';
-  }
+    console.log(res);
 };

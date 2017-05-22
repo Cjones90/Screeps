@@ -1,7 +1,7 @@
 
 //The main game loop
 
-var home = Game.spawns.Spawn1;
+var home = Game.spawns.Home;
 var creepDuties = require('creepDuties');
 var creepMaker = require('creepMaker');
 // var creepOrder = require('creepOrder');
@@ -13,23 +13,10 @@ var creepMaker = require('creepMaker');
 // var nextCreep = creepOrder(creepCount);
 creepMaker(home);
 
-  for(var i in Game.creeps) {
+for(var i in Game.creeps) {
 
-      var creep = Game.creeps[i];
+  var creep = Game.creeps[i];
 
-      if(creep.memory.role === 'harvester') {
-        creepDuties.harvester(creep, home);
-      }
+  creepDuties[creep.memory.role](creep, home)
 
-      if(creep.memory.role === 'builder') {
-        creepDuties.builder(creep, home);
-      }
-
-      if(creep.memory.role === 'knight') {
-        creepDuties.knight(creep, home);
-      }
-
-      if(creep.memory.role === 'archer') {
-        creepDuties.knight(creep, home);
-      }
-  }
+}
